@@ -111,6 +111,24 @@ app.route('/articles/:articleTitle')
             });
     })
 
+    // PATCH a specific article
+    .patch(function (req, res) {
+
+        Article.updateOne(
+
+            { title: req.params.articleTitle }, //Condition to update
+            { $set: req.body }, //To update the fields that was not change
+
+            //Callback to hold success or error
+            function (err) {
+                if (!err) {
+                    res.send("Successfully updated article.");
+                } else {
+                    res.send(err);
+                }
+            });
+    })
+
 
 
     .delete(function (req, res) {
