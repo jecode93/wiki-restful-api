@@ -25,8 +25,56 @@ const articleSchema = mongoose.Schema({
 //Article model
 const Article = mongoose.model("Article", articleSchema);
 
+
+
+/* 
+You can create chainable route handlers for a route path by using app.route().
+ Because the path is specified at a single location, creating modular routes is helpful, as is 
+ reducing redundancy and typos. For more information about routes, see: Router() documentation.
+
+Here is an example of chained route handlers that are defined by using app.route().
+*/
+app.route('/articles')
+    .get(function (req, res) {
+        Article.find({}, function (err, foundArticles) {
+            if (!err) {
+                // console.log(foundArticles);
+                // mongoose.connection.close();
+                res.send(foundArticles)
+            } else {
+                console.log(err);
+            }
+        });
+    })
+    .post(function (req, res) {
+
+        const newArticle = Article({
+            title: req.body.title,
+            content: req.body.content
+        });
+        newArticle.save(function (err) {
+            if (!err) {
+                res.send("Successfully added new article.");
+            } else {
+                res.send(err);
+            }
+        });
+    })
+    .delete(function (req, res) {
+        Article.deleteMany({}, function (err) {
+            if (!err) {
+                res.send("Successfully deleted all articles.");
+            } else {
+                res.send(err);
+            }
+        });
+    });
+
+
+
+
 //Get all the articles
-app.get("/articles", function (req, res) {
+/*app.get("/articles", function (req, res) {
     Article.find({}, function (err, foundArticles) {
         if (!err) {
             // console.log(foundArticles);
@@ -37,9 +85,10 @@ app.get("/articles", function (req, res) {
         }
     });
 });
-
+*/
 
 //Post a new article
+/*
 app.post("/articles", function (req, res) {
 
     const newArticle = Article({
@@ -54,10 +103,12 @@ app.post("/articles", function (req, res) {
         }
     });
 })
+*/
 
 
 //DELETE All articles
-app.delete("/articles", function (req, res) {
+
+/*app.delete("/articles", function (req, res) {
     Article.deleteMany({}, function (err) {
         if (!err) {
             res.send("Successfully deleted all articles.");
@@ -67,7 +118,7 @@ app.delete("/articles", function (req, res) {
     });
 });
 
-
+*/
 
 app.listen(3000, function () {
     console.log("App listen on port 3000");
