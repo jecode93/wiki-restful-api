@@ -130,15 +130,17 @@ app.route('/articles/:articleTitle')
     })
 
 
-
+    //DELETE a specific article
     .delete(function (req, res) {
-        Article.deleteMany({}, function (err) {
-            if (!err) {
-                res.send("Successfully deleted all articles.");
-            } else {
-                res.send(err);
-            }
-        });
+        Article.deleteOne(
+            { title: req.params.articleTitle }, // Condition to delete a specific article by it's title 
+            function (err) {
+                if (!err) {
+                    res.send("Successfully deleted the corresponding article.");
+                } else {
+                    res.send(err);
+                }
+            });
     });
 
 
