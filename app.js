@@ -26,7 +26,7 @@ const articleSchema = mongoose.Schema({
 const Article = mongoose.model("Article", articleSchema);
 
 
-
+//////////////////////////// REQUEST TARGETTING ALL ARTICLES ////////////////////////////
 /* 
 You can create chainable route handlers for a route path by using app.route().
  Because the path is specified at a single location, creating modular routes is helpful, as is 
@@ -69,6 +69,54 @@ app.route('/articles')
             }
         });
     });
+
+
+
+
+//////////////////////////// REQUEST TARGETTING A SPECIFIC ARTICLES ////////////////////////////
+
+app.route('/articles/:articleTitle')
+
+    //Get a specific article
+    .get(function (req, res) {
+        Article.findOne({ title: req.params.articleTitle }, function (err, foundArticles) {
+            if (foundArticles) {
+                // console.log(foundArticles);
+                // mongoose.connection.close();
+                res.send(foundArticles);
+            } else {
+                res.send("No articles matching that title was found.");
+            }
+        });
+    })
+
+
+    .post(function (req, res) {
+
+        const newArticle = Article({
+            title: req.body.title,
+            content: req.body.content
+        });
+        newArticle.save(function (err) {
+            if (!err) {
+                res.send("Successfully added new article.");
+            } else {
+                res.send(err);
+            }
+        });
+    })
+    .delete(function (req, res) {
+        Article.deleteMany({}, function (err) {
+            if (!err) {
+                res.send("Successfully deleted all articles.");
+            } else {
+                res.send(err);
+            }
+        });
+    });
+
+
+
 
 
 
@@ -121,5 +169,5 @@ app.post("/articles", function (req, res) {
 */
 
 app.listen(3000, function () {
-    console.log("App listen on port 3000");
+    console.log("Server started on port 3000");
 })
