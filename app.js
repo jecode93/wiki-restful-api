@@ -25,7 +25,18 @@ const articleSchema = mongoose.Schema({
 //Article model
 const Article = mongoose.model("Article", articleSchema);
 
-
+//Get all the articles
+app.get("/articles", function (req, res) {
+    Article.find({}, function (err, foundArticles) {
+        if (!err) {
+            // console.log(foundArticles);
+            // mongoose.connection.close();
+            res.send(foundArticles)
+        } else {
+            console.log(err);
+        }
+    });
+});
 
 
 
