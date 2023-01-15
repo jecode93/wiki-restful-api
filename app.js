@@ -91,20 +91,28 @@ app.route('/articles/:articleTitle')
     })
 
 
-    .post(function (req, res) {
+    //PUT a specific article and this method will overwrite our article if we enter a single information,
+    //To avoid that we use PATCH
+    .put(function (req, res) {
 
-        const newArticle = Article({
-            title: req.body.title,
-            content: req.body.content
-        });
-        newArticle.save(function (err) {
-            if (!err) {
-                res.send("Successfully added new article.");
-            } else {
-                res.send(err);
-            }
-        });
+        Article.updateOne(
+
+            { title: req.params.articleTitle }, //Condition to update
+            { $set: { title: req.body.title, content: req.body.content } }, //Fields to update
+            { overwrite: true }, //Overwrite the content
+
+            //Callback to hold success or error
+            function (err) {
+                if (!err) {
+                    res.send("Successfully updated article.");
+                } else {
+                    res.send(err);
+                }
+            });
     })
+
+
+
     .delete(function (req, res) {
         Article.deleteMany({}, function (err) {
             if (!err) {
